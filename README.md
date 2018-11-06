@@ -2,4 +2,4 @@
 
 fMRI data pre-processing and analysis scripts
 
-Adapted from eMed study
+Currently working on adapting the struct_path script
