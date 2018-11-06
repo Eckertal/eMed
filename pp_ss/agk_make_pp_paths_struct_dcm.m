@@ -5,9 +5,12 @@ function paths = agk_make_pp_paths_struct_dcm()
 % alcue
 % faces
 % nback
-% vr
+% mid
+% sst
 
 %% prep struct array
+% initialize empty variables that will later be filled with the paths to
+% the respective files
 paths              = [];
 paths.id           = [];
 paths.site         = [];
@@ -18,8 +21,10 @@ paths.Faces        = [];
 paths.Faces_log    = [];
 paths.NBack        = [];
 paths.NBack_log    = [];
-paths.VR           = [];
-paths.VR_log       = [];
+paths.MID          = [];
+paths.MID_log      = [];
+paths.SST          = [];
+paths.SST_log      = [];
 
 paths_cell  = {paths;paths;paths}; % one per site
 

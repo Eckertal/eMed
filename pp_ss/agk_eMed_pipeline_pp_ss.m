@@ -4,10 +4,9 @@
 % PIPELINE FOR RUNNING PREPROCESSING AND 1st LEVEL
 
 % Author: Alexander Genauck
-% Work address:
+% With modifications by M. Rothkirch, A.L. Eckert
 % email: alexander.genauck@charite.de
-% Website:
-% June 2018;
+% November 2018;
 
 %------------- BEGIN CODE --------------
 clear all
