@@ -26,7 +26,7 @@ if ~exist('paths')
     load(path_struct)
 end
 
-warning('suject 6 needs to get VR done and possibly other tasks; aka dcm2nii, pp, ss')
+%warning('subject 6 needs to get VR done and possibly other tasks; aka dcm2nii, pp, ss')
 
 %% ################ PARAMS #########################
 % what do we have in data?

@@ -42,16 +42,17 @@ data_root = 'E:\NGFN-Plus Alcohol';
 % t1?
 do_t1 = 1;
 
-%tasks = {'VR'};
-tasks = {'ALCUE','Faces','NBack','VR'};
-sites = {'Berlin','Mannheim','Bonn'};
-%sites = {'Bonn'};
+tasks = {'ALCUE','Faces','NBack','MID','SST'}; % added MID, SST, deleted VR
+sites = {'Berlin','Mannheim'}; % deleted Bonn
 
-cur_dir_mpr_dcm = fullfile(data_root,'MRI_Mprage', sites{1});
+% I uncommented this bc it seems not to be used
+%cur_dir_mpr_dcm = fullfile(data_root,'MRI_Mprage', sites{1});
 
 
-%% subs
-% the inventory
+%% subject code reading
+% Subject IDs are read into the program for further analyses and
+% identification
+
 inv        = readtable(path_inv,'delimiter','\t');
 
 % all subs Berlin
@@ -64,29 +65,15 @@ inv_mnm    = inv(~cellfun(@isempty,strfind(inv.site,'Mannheim')),:);
 subs_mnm   = inv_mnm.ID_initials;
 subs_mnm_2 = inv_mnm.ID_initials_NGFN;
 
-% subs Bonn
-inv_bnn    = inv(~cellfun(@isempty,strfind(inv.site,'Bonn')),:);
-subs_bnn   = inv_bnn.ID_initials_NGFN; % pretty sure this is the right ID
-subs_bnn_2 = repmat('999999',length(subs_bln),1);
-
-% the Bonn ID needs some editing
-for ss = 1:length(subs_bnn)
-    cur_sub    = subs_bnn{ss};
-    cur_spl    = strsplit(cur_sub,'_');
-    first_part = sprintf('%03s',cur_spl{1});
-    
-    if length(cur_spl) == 2
-        cur_sub = ['ADD_P_' first_part '_' cur_spl{2}];
-    else
-        cur_sub = ['ADD_P_' first_part];
-    end
-    subs_bnn{ss} = cur_sub;
-end
+% deleted Bonn incl. editing of ID number 
 
 all_subs   = {subs_bln;subs_mnm;subs_bnn};
 all_subs_2 = {subs_bln_2;subs_mnm_2;subs_bnn_2};
 
 %% t1
+% t1 refers to the structural MRI at timepoint 1.  
+% Usually assessed while subjects read instructions - before any tasks
+% This is necessary for the subsequent fMRI. 
 if do_t1
     for ss = 1:length(sites)
         % dicoms t1 current site directory
