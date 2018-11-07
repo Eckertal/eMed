@@ -1,5 +1,5 @@
 function paths = agk_make_pp_paths_struct_dcm()
-% modified by A.L. Eckert, anna-lena.eckert@charite.de
+% modified by A.L. Eckert, anna-lena.eckert@charite.de Berlin
 % make struct array to get full paths to dicoms
 % and to logfiles for
 % t1
