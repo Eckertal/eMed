@@ -161,6 +161,8 @@ end
 
 
 %% TASKS AND LOGFILES
+% Here we build the structures that finds the data and logfiles to the
+% respective tasks
 for tt = 1:length(tasks)
     for ss = 1:length(sites)
         
@@ -177,9 +179,7 @@ for tt = 1:length(tasks)
             
             % the dicom directories we have there
             all_files        = cellstr(ls());
-            if strcmp(sites{ss},'Bonn')
-                all_files_edited = upper(strrep(all_files,'_',''));
-            end
+            %deleted Bonn here
             
             for ii = 1:length(all_subs{ss})
                 cd(cur_dir_dicom)
