@@ -1,14 +1,17 @@
 function paths = agk_make_pp_paths_struct_dcm()
-% modified by A.L. Eckert, anna-lena.eckert@charite.de, Berlin
-% make struct array to get full paths to dicoms (.dcm files)
-% and to logfiles (_log) for
+% modified by A.L. Eckert, 
+% anna-lena.eckert@charite.de
+% make struct array to get full paths to 
+% dicoms (.dcm files) and to logfiles (_log) for
+% eMed study, Berlin site
+% ~~~~~~~~~~~~~~~~~~~~~~~
 % t1
 % alcue
 % faces
 % nback
 % mid 
 % sst
-
+% ~~~~~~~~~~~~~~~~~~~~~~~
 %% prep struct array
 % initialize empty variables that will later be filled with the paths to
 % the respective files
@@ -30,44 +33,31 @@ paths.SST_log      = [];
 paths_cell  = {paths;paths;paths}; % one per site
 
 %% some root paths
-% save struct path
-save_struct_path = 'T:\MyProject\eMed\pp_ss'; 
-% das hier anpassen für den schnelleren Rechner
-
-% inventory: where how what?  
-path_inv         = 'C:\Users\genaucka\Google Drive\Library\MATLAB\eMed\pp_ss\ngfn_inventory.csv';
-path_spss_bnn    = 'C:\Users\genaucka\Google Drive\Library\MATLAB\eMed\pp_ss\spss_bnn.csv';
+% save the path array under this location
+save_struct_path = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena';
+save_struct_path_copy = 'T:\MyProject\eMed\pp_ss'; 
 
 % data root
-data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging'; % probably different on the fast computer, too
+data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed'; 
+% this is the location of my 2 toy data sets
 
 % t1?
 do_t1 = 1;
-
+% create list with all tasks
 tasks = {'ALCUE','Faces','NBack','MID','SST'}; 
-sites = {'Berlin','Mannheim'}; 
-
-% I uncommented this bc it seems not to be used! ALE
-%cur_dir_mpr_dcm = fullfile(data_root,'MRI_Mprage', sites{1});
-
 
 %% subject code reading
-% Subject IDs are read into the program for further analyses and
-% identification
-% read inventory = inv...
-inv        = readtable(path_inv,'delimiter','\t');
-
+% major changes and deletions here due to the changes in folder structure
+% and site organization
 % all subs Berlin
 % find all Berlin subjects = subs_bln
+
+
+
 inv_bln    = inv(~cellfun(@isempty,strfind(inv.site,'Berlin')),:);
 subs_bln   = inv_bln.Co_ID;
 subs_bln_2 = repmat('999999',length(subs_bln),1);
 
-% subs Mannheim
-% find all Mannheim subjects = subs_mnm
-inv_mnm    = inv(~cellfun(@isempty,strfind(inv.site,'Mannheim')),:);
-subs_mnm   = inv_mnm.ID_initials;
-subs_mnm_2 = inv_mnm.ID_initials_NGFN;
 
 all_subs   = {subs_bln;subs_mnm};
 all_subs_2 = {subs_bln_2;subs_mnm_2}; % this is for NGFN - not needed?
