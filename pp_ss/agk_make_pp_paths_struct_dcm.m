@@ -1,5 +1,5 @@
 function paths = agk_make_pp_paths_struct_dcm()
-% modified by A.L. Eckert, anna-lena.eckert@charite.de Berlin
+% modified by A.L. Eckert, anna-lena.eckert@charite.de, Berlin
 % make struct array to get full paths to dicoms (.dcm files)
 % and to logfiles (_log) for
 % t1
@@ -31,56 +31,57 @@ paths_cell  = {paths;paths;paths}; % one per site
 
 %% some root paths
 % save struct path
-save_struct_path = 'C:\Users\genaucka\Google Drive\Library\MATLAB\eMed\pp_ss'; % probs have to change this? 
-%\\Charite.de\Centren\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging
+save_struct_path = 'T:\MyProject\eMed\pp_ss'; 
+% das hier anpassen für den schnelleren Rechner
 
-% inventory
+% inventory: where how what?  
 path_inv         = 'C:\Users\genaucka\Google Drive\Library\MATLAB\eMed\pp_ss\ngfn_inventory.csv';
 path_spss_bnn    = 'C:\Users\genaucka\Google Drive\Library\MATLAB\eMed\pp_ss\spss_bnn.csv';
 
 % data root
-data_root = 'E:\NGFN-Plus Alcohol'; % probably different too
+data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging'; % probably different on the fast computer, too
 
 % t1?
 do_t1 = 1;
 
-tasks = {'ALCUE','Faces','NBack','MID','SST'}; % added MID, SST, deleted VR
-sites = {'Berlin','Mannheim'}; % deleted Bonn
+tasks = {'ALCUE','Faces','NBack','MID','SST'}; 
+sites = {'Berlin','Mannheim'}; 
 
-% I uncommented this bc it seems not to be used!
+% I uncommented this bc it seems not to be used! ALE
 %cur_dir_mpr_dcm = fullfile(data_root,'MRI_Mprage', sites{1});
 
 
 %% subject code reading
 % Subject IDs are read into the program for further analyses and
 % identification
-
+% read inventory = inv...
 inv        = readtable(path_inv,'delimiter','\t');
 
 % all subs Berlin
+% find all Berlin subjects = subs_bln
 inv_bln    = inv(~cellfun(@isempty,strfind(inv.site,'Berlin')),:);
 subs_bln   = inv_bln.Co_ID;
 subs_bln_2 = repmat('999999',length(subs_bln),1);
 
 % subs Mannheim
+% find all Mannheim subjects = subs_mnm
 inv_mnm    = inv(~cellfun(@isempty,strfind(inv.site,'Mannheim')),:);
 subs_mnm   = inv_mnm.ID_initials;
 subs_mnm_2 = inv_mnm.ID_initials_NGFN;
 
 % deleted Bonn incl. editing of ID number 
 
-all_subs   = {subs_bln;subs_mnm;subs_bnn};
-all_subs_2 = {subs_bln_2;subs_mnm_2;subs_bnn_2};
+all_subs   = {subs_bln;subs_mnm};
+all_subs_2 = {subs_bln_2;subs_mnm_2}; % this is for NGFN study - not needed?
 
 %% t1
 % t1 refers to the structural MRI at timepoint 1.  
-% Usually assessed while subjects read instructions - before any tasks
-% This is necessary for the subsequent fMRI. 
+% Usually assessed before any tasks. Necessary for the subsequent fMRI. 
 if do_t1
     for ss = 1:length(sites)
         % dicoms t1 current site directory
-        cur_dir_mpr_dcm = fullfile(data_root,'MRI_Mprage', sites{ss}); % here are the t1 files
-        cd(cur_dir_mpr_dcm) % change current dir to this
+        cur_dir_mpr_dcm = fullfile(data_root,'MRI_Mprage', sites{ss}); % where to find t1 dcms
+        cd(cur_dir_mpr_dcm) % change current directory to this
         
         % the dicom directories we have there
         all_files        = cellstr(ls());
@@ -161,6 +162,8 @@ end
 
 
 %% TASKS AND LOGFILES
+% Here we build the structures that finds the data and logfiles to the
+% respective tasks
 for tt = 1:length(tasks)
     for ss = 1:length(sites)
         
@@ -177,9 +180,7 @@ for tt = 1:length(tasks)
             
             % the dicom directories we have there
             all_files        = cellstr(ls());
-            if strcmp(sites{ss},'Bonn')
-                all_files_edited = upper(strrep(all_files,'_',''));
-            end
+            %deleted Bonn here
             
             for ii = 1:length(all_subs{ss})
                 cd(cur_dir_dicom)
