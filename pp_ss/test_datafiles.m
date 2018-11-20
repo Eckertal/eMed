@@ -35,8 +35,11 @@ paths.MID           = [];
 paths.MID_log       = [];
 paths.SST           = [];
 paths.SST_log       = []; 
+% field map ordner
+% Puls ordner, spezifisch für die tasks. 
+% Sind im Unterordner MRT - Physio - davon brauchen wir puls und resp pro task. ECG und ext brauchen wir eher nicht. 
 
-% Initialize a cell array, here: only 1 for Berlin paths.
+% Initialize a cell array, here: only 1 for Berlin paths. Check: w/ paths. 
 paths_cell = {paths}
 
 %% Set some root paths.
@@ -45,7 +48,7 @@ save_struct_path = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Prak
 save_struct_path_copy = 'T:\MyProject\eMed\pp_ss';
 
 % specify data root node (location of folders w/ subject data)
-data_root = ('S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed');
+data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed';
 
 % t1? 
 do_t1 = 1;
@@ -67,9 +70,8 @@ tasks = {'ALCUE','faces','nback','MID','SST'};
 % assessed before any tasks
 
 if do_t1
-    % specify current directory of t1 dicoms
-    cur_dir_mpr_dcm = fullfile(data_root,'eMed_*','MRT','Imaging','*_MPR')
-    cd(cur_dir_mpr_dcm)
+    % change current directory to data root. 
+    cd(data_root)
     
     % add all folder names into an all subjects variable
     all_dirs       = cellstr(ls());
@@ -77,13 +79,16 @@ if do_t1
     N_subjects     = length(all_subs);
     
     % change into every subject directory
-    for ii = 1:N_subjects
-        cd(cur_dir_mpr_dcm)
-        
-        % write down the current subject
-        cur_sub_full            = all_subs{ss}{ii};
-        paths_cell{ss}(ii).id   = cur_sub_full;
+    for i = 1:N_subjects
+        subj_dir = fullfile(data_root,all_subs{i},'MRT','Imaging')
+        cd(subj_dir)
+        t1_dir = dir('*_t1_mpr_*')
+        paths(i).t1 = fullfile(subj_dir(t1_dir(find(cell2mat({t1_dir(:).isdir}))).name
     end
+    
+    % Das analog für alle anderen tasks
+    % und log files (wobei die nicht im subj_dir sind sondern im VD unterordner!)
+    
     
     if isempty(cur_ind)
         warning(['something''s wrong with t1 datafile at ' cur_sub])
@@ -111,3 +116,6 @@ if do_t1
 end 
 
 end 
+
+
+% once the 
