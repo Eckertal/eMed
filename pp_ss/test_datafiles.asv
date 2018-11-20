@@ -1,0 +1,74 @@
+function paths = test_datafiles()
+% ALE
+% make struct array to get to full paths to dicoms
+% (.dcm files) and to logfiles (.log) for eMed Study, Berlin site
+% +++++ TASKS +++++
+% ~~~~~~~~~~~~~~~~~
+% t1
+% ALCUE
+% faces
+% Nback
+% MID
+% SST
+% +++++++++++++++++
+% ~~~~~~~~~~~~~~~~~
+
+clc
+
+%% Prepare struct array.
+% The resulting array holds the paths to all dicom files
+% This struct array is then given to the pre-proccessing-
+% and 1st level analysis (agk_eMed_pipeline_pp_ss.m script). 
+
+% Step 1: Initialize empty variables, one per task
+paths               = [];
+paths.id            = [];
+paths.site          = [];
+paths.t1            = [];
+paths.ALCUE         = [];
+paths.ALCUE_log     = [];
+paths.Faces         = [];
+paths.Faces_log     = [];
+paths.NBack         = [];
+paths.NBack_log     = [];
+paths.MID           = [];
+paths.MID_log       = [];
+paths.SST           = [];
+paths.SST_log       = []; 
+
+% Initialize a cell array, here: only 1 for Berlin paths.
+paths_cell = {paths}
+
+%% Set some root paths.
+% Specify location where to save the path struct (and a copy)
+save_struct_path = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena';
+save_struct_path_copy = 'T:\MyProject\eMed\pp_ss';
+
+% specify data root node (location of folders w/ subject data)
+data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed'
+
+% t1? 
+do_t1 = 1;
+
+% create cell array with all task names
+tasks = {'ALCUE','faces','nback','MID','SST'};
+
+%% Read subject data
+% Goal is to obtain paths structure. 
+% which holds the path description to all data of all tasks per subject. 
+% We want this bc the pp pipeline needs it. 
+
+root = dir('S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed');
+
+root_cells = cellstr(ls())
+
+start = length(root_cells)/2+1;
+all_subs = root_cells(start:end)
+
+for k=all_subs
+   sub_foldername=dir((sprintf('%s',k))
+   sub_foldername = fullfile(
+   cd(sub_foldername)
+   cd(Imaging)
+   fprintf(ls())
+end

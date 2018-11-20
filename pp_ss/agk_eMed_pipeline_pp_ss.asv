@@ -30,8 +30,8 @@ end
 
 %% ################ PARAMS #########################
 % what do we have in data?
-tasks = {'t1','ALCUE','Faces','NBack','MID','SST'};
-sites = {'Berlin','Mannheim'};
+tasks = {'t1','ALCUE','Faces','NBack','VR'};
+sites = {'Berlin','Mannheim','Bonn'};
 
 % what to run?
 mfs         = 0; % make a folder structure
