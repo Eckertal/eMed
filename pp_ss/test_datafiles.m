@@ -83,7 +83,6 @@ if do_t1 == 1
         paths(i).t1 = fullfile(subj_imaging, t1_dir(1).name)    %t1 DICOMS in!
         %paths(i).t1 = fullfile(subj_dir(t1_dir(find(cell2mat({t1_dir(:).isdir}.name)))))
         % I get errors with this one all the time. DEBUG AND CHANGE!
-         
     end
     
     
@@ -112,6 +111,27 @@ if do_t1 == 1
         paths(i).ALCUE_phys = fullfile(subj_dir, 'Physio')
     end
     
+%% FACES
+% get dicoms, log files and physio data for task 2: faces
+% Dicoms & Physio
+    for i = 1:N_subjects
+        cd(data_root)
+        subj_mrt = fullfile(data_root,all_subs{i},'MRT')
+        subj_imag = fullfile(subj_mrt,'Imaging')
+        cd(subj_imag)
+        faces_dir = dir('*_faces')
+        paths(i).Faces = fullfile(subj_imag, faces_dir.name)
+        paths(i).Faces_phys = fullfile(subj_mrt, 'Physio')
+    end
+
+% Logs
+    for i = 1:N_subjects
+        cd(data_root)
+        vd_sub = fullfile(data_root,all_subs{i},'VD')
+        faces_dir = dir('*_Faces')
+        cd(faces_dir.name)
+        paths(i).Faces_log = fullfile(vd_sub, faces_dir.name)
+    end
 end
 
 %%
