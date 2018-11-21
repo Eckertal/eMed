@@ -121,7 +121,7 @@ if do_t1 == 1
         cd(subj_imag)
         faces_dir = dir('*_faces')
         paths(i).Faces = fullfile(subj_imag, faces_dir.name)
-        paths(i).Faces_phys = fullfile(subj_mrt, 'Physio')
+        paths(i).Faces_phys = fullfile(subj_imag, 'Physio')
     end
 
 % Logs
@@ -131,6 +131,27 @@ if do_t1 == 1
         faces_dir = dir('*_Faces')
         cd(faces_dir.name)
         paths(i).Faces_log = fullfile(vd_sub, faces_dir.name)
+    end
+    
+%% NBack
+% get dicoms, log files and physio data for task 3: NBack
+% Dicoms & Physio
+    for i = 1:N_subjects
+        cd(data_root)
+        sub_mrt = fullfile(data_root,all_subs{i},'MRT');
+        sub_imag = fullfile(sub_mrt,'Imaging');
+        cd(sub_imag)
+        nback_dir = dir('*_nback');
+        paths(i).NBack = fullfile(sub_imag, nback_dir.name);
+        paths(i).NBack_phys = fullfile(sub_imag,'Physio');
+    end
+% Logs
+    for i = 1:N_subjects
+        cd(data_root);
+        sub_vd = fullfile(data_root,all_subs{i},'VD');
+        cd(sub_vd);
+        nback_dir = dir('*_N_Back');
+        paths(i).NBack_log = fullfile(sub_vd, nback_dir.name);
     end
 end
 
