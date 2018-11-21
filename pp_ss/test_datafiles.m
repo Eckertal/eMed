@@ -26,24 +26,20 @@ paths.id            = [];
 paths.t1            = [];
 paths.ALCUE         = [];
 paths.ALCUE_log     = [];
-paths.ALCUE_resp    = [];
-paths.ALCUE_puls    = [];
+paths.ALCUE_phys    = [];
 paths.Faces         = [];
 paths.Faces_log     = [];
-paths.Faces_resp    = [];
-paths.Faces.puls    = [];
+paths.Faces_phys    = [];
 paths.NBack         = [];
 paths.NBack_log     = [];
-paths.NBack_resp    = [];
-paths.NBack_puls    = [];
+paths.NBack_phys    = [];
 paths.MID           = [];
 paths.MID_log       = [];
-paths.MID_resp      = [];
-paths.MID_puls      = [];
+paths.MID_phys      = [];
 paths.SST           = [];
 paths.SST_log       = []; 
-paths.SST_resp      = [];
-paths.SST_puls      = [];
+paths.SST_phys      = [];
+
 % field map ordner - erst einmal weglassen, kommen später!
 % Puls ordner, spezifisch fuer die tasks. 
 % Sind im Unterordner MRT - Physio - davon brauchen wir puls und resp pro task. ECG und ext brauchen wir eher nicht. 
@@ -86,9 +82,7 @@ if do_t1 == 1
         t1_dir = dir('*_t1_mpr_*');
         paths(i).t1 = fullfile(subj_imaging, t1_dir(1).name)    %t1 DICOMS in!
         %paths(i).t1 = fullfile(subj_dir(t1_dir(find(cell2mat({t1_dir(:).isdir}.name)))))
-        % I get errors with this one all the time. That's why I'm going for
-        % the easier, but more error prone method of appending the first
-        % entry in the t1_dir array to the paths.!
+        % I get errors with this one all the time. DEBUG AND CHANGE!
          
     end
     
@@ -106,10 +100,17 @@ if do_t1 == 1
 % Get paths to log files ALCUE
     for i = 1:N_subjects
         cd(data_root)
-        subj_vd = fullfile(data_root,all_subs{i}, 'VD')
-        paths(i).ALCUE_log = subj_vd
+        subj_vd = fullfile(data_root,all_subs{i}, 'VD');
+        cd(subj_vd);
+        alcue_log_dir = dir('*_Alcue');
+        paths(i).ALCUE_log = fullfile(subj_vd, alcue_log_dir.name)
     end
-    
+% Get paths to physio data
+    for i = 1:N_subjects
+        cd(subj_dir)
+        subj_dir = fullfile(data_root, all_subs{i},'MRT');
+        paths(i).ALCUE_phys = fullfile(subj_dir, 'Physio')
+    end
     
 end
 
