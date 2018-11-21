@@ -149,9 +149,11 @@ fprintf(checkingpaths, '\n\nPATHS TO LOG-FILES \n\n');
 fprintf(checkingpaths, '%s\n%s\n%s\n%s\n%s\n',paths.ALCUE_log, paths.Faces_log, paths.NBack_log, paths.MID_log, paths.SST_log);
 fprintf(checkingpaths, '\n\nPATHS TO PHYSIO FILES \n\n');
 fprintf(checkingpaths, '%s\n%s\n%s\n%s\n%s\n', paths.ALCUE_phys, paths.Faces_phys, paths.NBack_phys, paths.MID_phys, paths.SST_phys);
-fclose(checkingpaths)     
-    
-    
+fclose(checkingpaths) 
+
+
 end
 
-
+% Nächste Schritte.
+% 1. Path struct checken ob irgendwo leere Zeilen? 
+% 2. Path struct abspeichern für future use in dem nächsten Skript!?
