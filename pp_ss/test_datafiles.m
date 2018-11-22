@@ -43,7 +43,7 @@ paths.SST_phys      = [];
 % field map ordner - erst einmal weglassen, kommen später! 
 
 % Initialize a cell array 
-paths_cell = {paths}
+paths_cell = {paths};
 
 %% Set some root paths.
 % Specify location where to save the path struct (and a copy)
@@ -53,7 +53,7 @@ save_struct_path_copy = 'T:\MyProject\eMed\pp_ss';
 % specify data root node (location of folders w/ subject data)
 data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed';
 
-cd(data_root)
+cd(data_root);
 all_dirs       = cellstr(ls());     % get all subject IDs
 all_subs       = all_dirs(3:end);   % first two entries are ., .. - cut
 N_subjects     = length(all_subs);  % get N
@@ -65,15 +65,15 @@ tasks = {'ALCUE','faces','nback','MID','SST'};
 %% t1
 % structural imaging at time-point 1, assessed before any tasks
 
-    cd(data_root)                       % change current directory to data root.
+    cd(data_root);                       % change current directory to data root.
     
     for i = 1:N_subjects                % cd into every subject & get paths to t1 dcm folders
-        paths(i).id = i                 % we might want the OG IDs here.
+        paths(i).id = i;                 % we might want the OG IDs here.
         subj_dir = fullfile(data_root,all_subs{i},'MRT');
         subj_imaging = fullfile(subj_dir,'Imaging');
-        cd(subj_imaging)
+        cd(subj_imaging);
         t1_dir = dir('*_t1_mpr_*');
-        paths(i).t1 = fullfile(subj_imaging, t1_dir(1).name)    %t1 DICOMS in!
+        paths(i).t1 = fullfile(subj_imaging, t1_dir(1).name);    %t1 DICOMS in!
         %paths(i).t1 = fullfile(subj_dir(t1_dir(find(cell2mat({t1_dir(:).isdir}.name)))))
         % I get errors with this one all the time. DEBUG AND CHANGE!
     end   
@@ -101,9 +101,9 @@ tasks = {'ALCUE','faces','nback','MID','SST'};
         paths(i).MID = fullfile(subj_img, mid_dir.name);
         paths(i).MID_phys = fullfile(subj_mrt, 'Physio');
         % get SST dicoms and physio
-        sst_dir = dir('*_SST_eMED')
-        paths(i).SST = fullfile(subj_img, sst_dir.name)
-        paths(i).SST_phys = fullfile(subj_mrt, 'Physio')
+        sst_dir = dir('*_SST_eMED');
+        paths(i).SST = fullfile(subj_img, sst_dir.name);
+        paths(i).SST_phys = fullfile(subj_mrt, 'Physio');
     end
  
     
@@ -115,19 +115,19 @@ tasks = {'ALCUE','faces','nback','MID','SST'};
         cd(subj_vd);
         % Get paths to ALCUE log files
         alcue_log_dir = dir('*_Alcue');
-        paths(i).ALCUE_log = fullfile(subj_vd, alcue_log_dir.name)
+        paths(i).ALCUE_log = fullfile(subj_vd, alcue_log_dir.name);
         % get paths to Faces Log files
-        faces_dir = dir('*_Faces')
-        paths(i).Faces_log = fullfile(subj_vd, faces_dir.name)
+        faces_dir = dir('*_Faces');
+        paths(i).Faces_log = fullfile(subj_vd, faces_dir.name);
         % get paths to NBack Log files
         nback_dir = dir('*_N_Back');
         paths(i).NBack_log = fullfile(subj_vd, nback_dir.name);
         % Get paths to MID log files
-        mid_logdir = dir('*_MID')
-        paths(i).MID_log = fullfile(subj_vd, mid_logdir.name)
+        mid_logdir = dir('*_MID');
+        paths(i).MID_log = fullfile(subj_vd, mid_logdir.name);
         % Get paths to SST
-        sst_logdir = dir('*_SST')
-        paths(i).SST_log = fullfile(subj_vd, sst_logdir.name)
+        sst_logdir = dir('*_SST');
+        paths(i).SST_log = fullfile(subj_vd, sst_logdir.name);
     end
 
 %% Checks
@@ -136,13 +136,9 @@ tasks = {'ALCUE','faces','nback','MID','SST'};
 % This opens and writes a txt file with all the paths for checking it
 % manually
 
-all_dicom_paths = [paths.t1 paths.ALCUE paths.Faces paths.NBack paths.MID paths.SST]
-all_log_paths = [paths.ALCUE_log, paths.Faces_log, paths.NBack_log, paths.MID_log, paths.SST_log]
-all_phys_paths = [paths.ALCUE_phys, paths.Faces_phys, paths.NBack_phys, paths.MID_phys, paths.SST_phys]
-
 cd 'T:\MyProject\eMed'
 checkingpaths = fopen('allpaths.txt','w');
-fprintf(checkingpaths, 'Number of participants considered: %i.\n\n',N_subjects)
+fprintf(checkingpaths, 'Number of participants considered: %i.\n\n',N_subjects);
 fprintf(checkingpaths, 'PATHS TO DICOM FILES \n\n');
 fprintf(checkingpaths,'%s\n%s\n%s\n%s\n%s\n%s\n',paths.t1,paths.ALCUE, paths.Faces, paths.NBack, paths.MID, paths.SST);
 fprintf(checkingpaths, '\n\nPATHS TO LOG-FILES \n\n');
