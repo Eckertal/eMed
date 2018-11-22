@@ -1,4 +1,4 @@
-Number of participants considered: 2.
+Displaying paths for__2__participants.
 
 PATHS TO DICOM FILES 
 
