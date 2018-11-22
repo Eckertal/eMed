@@ -2,6 +2,7 @@ function paths = test_datafiles()
 % Author: Anna-Lena Eckert, Marcus Rothkirch
 % make struct array to get to full paths to dicoms
 % (.dcm files) and to logfiles (.log) for eMed Study, Berlin site
+% perform some checks and then save it
 % +++++ TASKS +++++
 % ~~~~~~~~~~~~~~~~~
 % t1
@@ -47,8 +48,8 @@ paths_cell = {paths};
 
 %% Set some root paths.
 % Specify location where to save the path struct (and a copy)
-save_struct_path = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena';
-save_struct_path_copy = 'T:\MyProject\eMed\pp_ss';
+save_struct_path = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena'; % no permission yet
+save_struct_path_copy = 'T:\MyProject\eMed';
 
 % specify data root node (location of folders w/ subject data)
 data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed';
@@ -147,8 +148,38 @@ fprintf(checkingpaths, '\n\nPATHS TO PHYSIO FILES \n\n');
 fprintf(checkingpaths, '%s\n%s\n%s\n%s\n%s\n', paths.ALCUE_phys, paths.Faces_phys, paths.NBack_phys, paths.MID_phys, paths.SST_phys);
 fclose(checkingpaths) 
 
+%% Packing and saving
+paths = [paths_cell];
+warning('SAVING NOW!');
+cd(save_struct_path_copy) % no permission to other path
+save('struct_paths_NEW.mat', 'paths');
+warning('Saving completed');
 
 end
+
+
+%% AUXILIARY FUNCTIONS
+function cur_dcm = agk_check_dcm(cur_path,sites,ss,sur_sub,tasks,tt)
+cd(data_root)
+% check whether there are dcm files
+cur_dcm         = cellstr(ls('*dcm'));
+if isempty(cur_dcm{1})
+    cur_dcm = cellstr(ls('*IMA'));
+end
+% search for anything, and print that
+if isempty(cur_dcm{1})
+    cur_dcm = cellstr(ls());
+    
+    if length(cur_dcm) == 2 % this means the folder is empty!
+        warning(disp(['EMPTY DCM FOLDER: ',subj_dir,subj_img,subj_]))
+        cur_dcm = [];
+        return
+    end
+   
+end 
+end
+
+
 
 % Nächste Schritte.
 % 1. Path struct checken ob irgendwo leere Zeilen? 
