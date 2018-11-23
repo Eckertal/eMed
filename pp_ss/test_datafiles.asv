@@ -70,8 +70,9 @@ all_subs       = all_dirs(3:end);   % first two entries are ., .. - cut
 N_subjects     = length(all_subs);  % get N
 
 
-%% ~~~~~~~~~~~~~~~~~~~~~~~~~Read subject data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-%%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+% ~~~~~~~~~~~~~~~~~~~~~~~~~Read subject data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %% t1
 % structural imaging at time-point 1, assessed before any tasks
 
@@ -155,16 +156,10 @@ fprintf(checkingpaths, '\n\nPATHS TO LOG-FILES \n\n');
 fprintf(checkingpaths, '%s\n%s\n%s\n%s\n%s\n',paths.ALCUE_log, paths.Faces_log, paths.NBack_log, paths.MID_log, paths.SST_log);
 fprintf(checkingpaths, '\n\nPATHS TO PHYSIO FILES \n\n');
 fprintf(checkingpaths, '%s\n%s\n%s\n%s\n%s\n', paths.ALCUE_phys, paths.Faces_phys, paths.NBack_phys, paths.MID_phys, paths.SST_phys);
-fclose(checkingpaths) 
-
-
-per_subj = fopen('subj_paths.txt','w');
-for ss = length(all_subs{i})
-    fprintf(per_subj, 'Displaying paths for subject number %i \n\n',all_subs{i})
-    fprintf(per_subj, '
+fclose(checkingpaths); 
 
 %% Packing and saving
-paths = [paths_cell];
+paths = paths_cell;
 warning('SAVING NOW!');
 cd(save_struct_path_copy) % no permission to other path
 save('struct_paths_NEW.mat', 'paths');
