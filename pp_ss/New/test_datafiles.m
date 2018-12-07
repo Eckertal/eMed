@@ -52,7 +52,7 @@ paths.SST_log       = [];
 paths.SST_phys      = [];
 
 % field map ordner - erst einmal weglassen, kommen später! 
-
+% Den Ordner mit der geringest Nummer pro task 
 % Initialize a cell array 
 paths_cell = {paths};
 
@@ -79,7 +79,7 @@ N_subjects     = length(all_subs);  % get N
     cd(data_root);                       % change current directory to data root.
     
     for i = 1:N_subjects                % cd into every subject & get paths to t1 dcm folders
-        paths(i).id = i;                 % we might want the OG IDs here.
+        paths(i).id = i;                 % we might want the OG IDs here. also den Ordnernamen der VP
         subj_dir = fullfile(data_root,all_subs{i},'MRT');
         subj_imaging = fullfile(subj_dir,'Imaging');
         cd(subj_imaging);
@@ -159,36 +159,9 @@ fprintf(checkingpaths, '%s\n%s\n%s\n%s\n%s\n', paths.ALCUE_phys, paths.Faces_phy
 fclose(checkingpaths); 
 
 %% Packing and saving
-paths = paths_cell;
 warning('SAVING NOW!');
 cd(save_struct_path_copy) % no permission to other path
 save('struct_paths_NEW.mat', 'paths');
 warning('Saving completed');
 
 end
-
-
-%% AUXILIARY FUNCTIONS
-% function for checking whether all cells have something in them
-% Output is current dcm! 
-% Function name is check_dcm
-% input arguments are paths
-%function cur_dcm = check_dcm(paths(x))
-%cd(data_root)
-% check whether there are dcm files
-%cur_dcm         = cellstr(ls('*dcm'));
-%if isempty(cur_dcm{1})
-%    cur_dcm = cellstr(ls('*IMA'));
-%end
-% search for anything, and print that
-%if isempty(cur_dcm{1})
-%    cur_dcm = cellstr(ls());
-    
-%    if length(cur_dcm) == 2 % this means the folder is empty!
-%        warning(disp(['EMPTY DCM FOLDER: ',subj_dir,subj_img,subj_]))
-%        cur_dcm = [];
-%        return
-%    end
-   
-%end 
-%end
