@@ -2,4 +2,4 @@
 
 fMRI data pre-processing and analysis scripts
 
-Currently working on adapting the struct_path script
+make_paths_struct.m : find the paths to all DICOM files per tasks
