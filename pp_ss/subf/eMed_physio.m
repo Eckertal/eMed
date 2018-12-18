@@ -8,7 +8,7 @@
 clear all
 clc
 
-data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed';
+data_root = 'S:\AG\AG-eMed\Daten\eMed_Backup\eMed';
 nifti_files = 'T:\MyProject\niftis_ALCUE_P1\swrf';
 dicom_files = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging\005_ep2d_bold_mos_ALCUE'; % insert struct from other script here!
 
