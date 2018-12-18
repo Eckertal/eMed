@@ -2,7 +2,7 @@ function paths = agk_make_pp_paths_struct_dcm()
 % modified by A.L. Eckert, 
 % anna-lena.eckert@charite.de
 % make struct array to get full paths to 
-% dicoms (.dcm files) and to logfiles (_log) for
+% dicoms (.dcm files), logfiles (_log) and physio-files for
 % eMed study, Berlin site
 % ~~~~~~~~~~~~~~~~~~~~~~~
 % t1
@@ -29,17 +29,16 @@ paths.MID          = [];
 paths.MID_log      = [];
 paths.SST          = [];
 paths.SST_log      = [];
+paths.physio       = [];
 
 paths_cell  = {paths;paths;paths}; % one per site
 
 %% some root paths
 % save the path array under this location
-save_struct_path = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena';
-save_struct_path_copy = 'T:\MyProject\eMed\pp_ss'; 
+save_struct_path = 'S:\AG\AG-eMed\Daten\eMed_Backup\eMED_Analysen\fMRI';
 
 % data root
-data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed'; 
-% this is the location of my 2 toy data sets
+data_root = 'S:\AG\AG-eMed\Daten\eMed_Backup\eMed'; 
 
 % t1?
 do_t1 = 1;
