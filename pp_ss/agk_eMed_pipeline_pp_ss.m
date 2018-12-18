@@ -114,6 +114,7 @@ if d2n
     end
 end
 
+
 %% ############### PREPROCESS #######################
 if pp
     % preprocess convert from source to target
@@ -162,6 +163,16 @@ if chckpp
     end
     
 end
+
+%% ############### PhysIO ##########################
+
+% extra script machen?
+% hier muss sich das Prgramm alle infos suchen die man sonst
+% in den batch editor eingibt
+% flexibilität: manchmal gibt es das nicht
+% 
+
+
 
 %% ############### COPY T1 PP #######################
 if cpyppt1

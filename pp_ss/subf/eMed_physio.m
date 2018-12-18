@@ -10,12 +10,17 @@ clc
 
 data_root = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed';
 nifti_files = 'T:\MyProject\eMed\niftis_ALCUE_P1\swrf';
-dicom_files = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging\005_ep2d_bold_mos_ALCUE' % insert struct from other script here!
+dicom_files = 'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging\005_ep2d_bold_mos_ALCUE'; % insert struct from other script here!
 
-scanner_vendor = 'Siemens'
+scanner_vendor = 'Siemens';
+
+cd(nifti_files)
 
 % which information is needed for the batch editor? 
-
+% where are the resp/ puls files? 
+% where is the first dicom in time-series? 
+% where are log files for dicoms? 
+% 
 
 %% BATCH CODE
 % this is taken from the SPM batch editor
@@ -24,9 +29,9 @@ scanner_vendor = 'Siemens'
 % it also needs the first dicom of the time series
 % and some log infos from the physio files! 
 matlabbatch{1}.spm.tools.physio.save_dir = {'T:\MyProject\eMed'};
-matlabbatch{1}.spm.tools.physio.log_files.vendor = 'Siemens';
-matlabbatch{1}.spm.tools.physio.log_files.cardiac = {'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Physio\eMed_AP_1_131_ALCUE.ecg'};
-matlabbatch{1}.spm.tools.physio.log_files.respiration = {'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Physio\eMed_AP_1_131_ALCUE.resp'};
+matlabbatch{1}.spm.tools.physio.log_files.vendor = scanner_vendor;
+matlabbatch{1}.spm.tools.physio.log_files.cardiac = {'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Physio\eMed_AP_1_131_ALCUE.ecg'}; % this could all come from struct!
+matlabbatch{1}.spm.tools.physio.log_files.respiration = {'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Physio\eMed_AP_1_131_ALCUE.resp'}; % struct
 matlabbatch{1}.spm.tools.physio.log_files.scan_timing = {'S:\AG\AG-Emotional-Neuroscience\Restricted\DFG_FOR_1617\Praktikanten\Anna-Lena\eMed\eMed_AP_1_131\MRT\Imaging\005_ep2d_bold_mos_ALCUE\1.3.12.2.1107.5.2.32.35435.2018092815544944218400494.dcm'};
 matlabbatch{1}.spm.tools.physio.log_files.sampling_interval = [];
 matlabbatch{1}.spm.tools.physio.log_files.relative_start_acquisition = 0;
@@ -61,6 +66,5 @@ matlabbatch{1}.spm.tools.physio.verbose.level = 2;
 matlabbatch{1}.spm.tools.physio.verbose.fig_output_file = '';
 matlabbatch{1}.spm.tools.physio.verbose.use_tabs = false;
 
-cd(batch_path);
 %save and specify output file!
 clear matlabbatch
