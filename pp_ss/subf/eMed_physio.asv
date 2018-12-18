@@ -32,7 +32,7 @@ batch_filename = 'batch_cfs_cs_preproc_physio_subj_';
 batch_path = 'T:\MyProject\eMed' % this is where the batch is saved? 
 fig_output_file = ''; % empty: we don't want to save any figures
 log_file_prefix = 'CFS_SC_';
-tasks = {'ALCUE','Faces','NBack','MID','SST'}
+tasks = {'ALCUE',''}
 
 cd(nifti_files)
 subjects = 23; % Hier die Zahl prüfen
@@ -44,13 +44,6 @@ subjects = 23; % Hier die Zahl prüfen
 
 H = spm_vol(P)
 H.dim
-
-%% LOOPY
-for s = 1:length(subjects)
-    subjects(s)
-    physio_folder = strrep(physio_folder
-    for t = tasks
-
 
 %% BATCH CODE
 % this is taken from the SPM batch editor
