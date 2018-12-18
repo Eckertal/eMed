@@ -1,6 +1,7 @@
 %function [] = agk_eMed_pipeline_pp_ss_int3()
 %% ############### PREAMBLE ########################
 % ##################################################
+% new comment
 % PIPELINE FOR RUNNING PREPROCESSING AND 1st LEVEL
 
 % Author: Alexander Genauck
@@ -169,7 +170,7 @@ end
 % extra script machen?
 % hier muss sich das Prgramm alle infos suchen die man sonst
 % in den batch editor eingibt
-% flexibilit‰t: manchmal gibt es das nicht
+% flexibilit√§t: manchmal gibt es das nicht
 % 
 
 
