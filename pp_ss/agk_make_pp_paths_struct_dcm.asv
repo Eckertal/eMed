@@ -144,6 +144,12 @@ for ss = 1:length(data_root)    % loop for sites
                         {log_folders(:).name},{log_folders(:).isdir}));
                     end
                     
+                    % for some tasks there are also log files for
+                    % trainings, which should not be selected for the fMRI
+                    % analysis
+                    if ~isempty(task_folder) && length(task_folder)>1
+                        
+                        train_folder = 
                     
                         
                     
