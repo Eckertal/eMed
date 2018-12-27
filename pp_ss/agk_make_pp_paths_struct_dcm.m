@@ -110,10 +110,17 @@ for ss = 1:length(data_root)    % loop for sites
                                 tasks{tt},fullfile(imag_dir,...
                                 mri_folders(task_folder).name));
                         end
-                        
                     end
-                    
                 end
+                
+            else % for Mannheim all fMRI data are in one folder, they will 
+                 % be added to the path structure here (paths.fMRI_all) and 
+                 % be assigned to the respective task after DICOM import
+                 dcm_data=dir('*.ima');
+                 
+                 if ~isempty(dcm_data)
+                     paths_cell{ss}(ii).MRI_all=subj_dir;
+                 end
                 
             end
             
@@ -121,10 +128,52 @@ for ss = 1:length(data_root)    % loop for sites
             
             cd(subj_dir);
             
-            if exist(fullfile(subj_dir,'VD'),'dir')
+            % In Berlin, the log files for the different tasks are already
+            % saved in separate folders. In Mannheim, there is initally
+            % only one folder containing all log files. To facilitate the
+            % selection of the appropriate log file in the analysis, 
+            % separate folders will be generated at this stage for Mannheim 
+            % too.  
+            
+            if exist(fullfile(subj_dir,'VD'),'dir') | ...
+                    exist(fullfile(subj_dir,'logfiles'),'dir')
                 
-                cd(fullfile(subj_dir,'VD'));
+                switch length(dir('VD'))
+                    case 0
+                       cd(fullfile(subj_dir,'logfiles'));
+                    otherwise
+                        cd(fullfile(subj_dir,'VD'));
+                end
+                    
                 log_folders=dir;
+                
+                % For Mannheim, separate folders for the log files of the
+                % different tasks will now be created. 
+                % Check first if task-specific folders already exist.
+                task_log_dir=find(cellfun(@(x,y) length(x)>2 & ...
+                    y==1,{log_folders.name},{log_folders.isdir}));
+                
+                if isempty(task_log_dir)
+                    % create new folder for each task
+                    for tt=1:length(tasks)
+                        mkdir(tasks{tt});
+                        
+                        % copy according log files to this folder
+                        files_to_copy=find(cellfun(@(x,y) ...
+                            ~isempty(regexpi(x,tasks{tt})) & y==0,...
+                            {log_folders.name},{log_folders.isdir}));
+                        
+                        if ~isempty(files_to_copy)
+                            for cc=1:length(files_to_copy)
+                                copyfile(log_folders(files_to_copy(cc)).name,...
+                                    tasks{tt});
+                            end
+                        end
+                        
+                    end
+                    
+                end
+                
                 
                 for tt=1:length(tasks)
                     
@@ -133,7 +182,7 @@ for ss = 1:length(data_root)    % loop for sites
                         ~isempty(regexpi(x,tasks{tt})) & ...
                         isempty(regexpi(x,'Training')) & ...
                         isempty(regexpi(x,'Memory')) & y==1,...
-                        {log_folders(:).name},{log_folders(:).isdir}));
+                        {log_folders.name},{log_folders.isdir}));
                     
                     % for nback the search string has to be modified,
                     % because it differs from the name for the MRI files
@@ -143,22 +192,15 @@ for ss = 1:length(data_root)    % loop for sites
                         ~isempty(regexpi(x,alt_task_name)) & y==1,...
                         {log_folders(:).name},{log_folders(:).isdir}));
                     end
-                    
-                    
-                        
-                    
-                
-                
-            
+                end
+            end
         end
-        
     end
-    
 end
         
         
         
-        
+   
     
     
 
