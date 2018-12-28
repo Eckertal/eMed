@@ -47,7 +47,23 @@ length_fol_name = [13 8];
 % t1?
 do_t1 = 1;
 % create list with all tasks
-tasks = {'ALCUE','faces','nback','MID','SST'}; 
+tasks = {'ALCUE','faces','nback','MID','SST'};
+
+% For the data from Mannheim, the log files are in one folder initially. To
+% facilitate the analysis, separate folders will be created at this stage
+% for the different tasks. While some log files contain the task name in 
+% their file name (e.g. faces.xls), other log files do not (MID and SST). 
+% For the latter cases, log file names can be specified in the variable 
+% 'log_filename_tasks_mnm'. Each cell corresponds to the task as specified 
+% in the variable 'tasks'. Log file names for Mannheim usually start with
+% the subject ID. What has to be specified here is the part of the log file
+% name following the subject ID. For instance: The file
+% "37010011_thresh.txt" is a log file of the MID task. If the MID task is 
+% listed as the fourth task in the variable 'tasks', the following has to
+% be specified to select this log file for the MID task:
+% log_filename_tasks_mnm{4} = {'_thresh.txt'}
+log_filename_tasks_mnm{4}={'-knutson';'.txt';'_pretest';'_thresh';'_soa'}; % for MID
+log_filename_tasks_mnm{5}={'-stop_signal';'_exp_time';'_response_class';'_stoptrial'}; % for SST
 
 %% Acces individual subject folder and write folder name to paths.id
 
@@ -79,7 +95,7 @@ for ss = 1:length(data_root)    % loop for sites
                 cd(fullfile(subj_dir,'MRT'));
                 mri_dir=cd;
                 
-                if exist(fullfile(cd,'Imaging'))
+                if exist(fullfile(cd,'Imaging'),'dir')
                     
                     cd(fullfile(mri_dir,'Imaging'));
                     imag_dir=cd;
@@ -144,7 +160,8 @@ for ss = 1:length(data_root)    % loop for sites
                     otherwise
                         cd(fullfile(subj_dir,'VD'));
                 end
-                    
+                
+                log_dir=cd;
                 log_folders=dir;
                 
                 % For Mannheim, separate folders for the log files of the
@@ -163,15 +180,37 @@ for ss = 1:length(data_root)    % loop for sites
                             ~isempty(regexpi(x,tasks{tt})) & y==0,...
                             {log_folders.name},{log_folders.isdir}));
                         
+                        % for some tasks, file names that were specified
+                        % before have to be selected here
+                        if ~isempty(log_filename_tasks_mnm{tt})
+                            
+                            % add subject ID to every specified file name
+                            search_filename=cellfun(@(x) ...
+                                [paths_cell{ss}(ii).id x],...
+                                log_filename_tasks_mnm{tt},'UniformOutput',...
+                                false);
+                            
+                            spec_files=find(cellfun(@(x) ...
+                                ~isempty(cell2mat(regexpi(x,...
+                                search_filename))),{log_folders.name}));
+                            
+                            files_to_copy=unique([files_to_copy spec_files]);
+                            
+                        end
+                        
+                        % copy files
                         if ~isempty(files_to_copy)
                             for cc=1:length(files_to_copy)
                                 copyfile(log_folders(files_to_copy(cc)).name,...
                                     tasks{tt});
                             end
+                            
                         end
-                        
                     end
                     
+                    % search again for task specific folders (which have
+                    % just been created)
+                    log_folders=dir;
                 end
                 
                 
@@ -192,7 +231,45 @@ for ss = 1:length(data_root)    % loop for sites
                         ~isempty(regexpi(x,alt_task_name)) & y==1,...
                         {log_folders(:).name},{log_folders(:).isdir}));
                     end
+                    
+                    % add folder that contains the log files for this task
+                    % to the paths-structure
+                    if ~isempty(task_folder)
+                        paths_cell{ss}(ii)=setfield(paths_cell{ss}(ii),...
+                            [tasks{tt} '_log'],fullfile(log_dir,...
+                            log_folders(task_folder).name));
+                    end
+                    
                 end
+            end
+            
+            %% Find physio-files
+            
+            % Physio files are all located in one folder per subject. For
+            % Berlin, there is one physio file per task, for Mannheim,
+            % there is one physio file across all tasks. Only the folder
+            % containing all the physio data will be specified here. The
+            % association between the different tasks and the physio data
+            % will be sorted out later.
+            
+            cd(subj_dir);
+            
+            % go to physio folder
+            if exist(fullfile(subj_dir,'physio'),'dir')
+                cd(fullfile(subj_dir,'physio'));
+            elseif exist(fullfile(subj_dir,'MRT','Physio'),'dir')
+                cd(fullfile(subj_dir,'MRT','Physio'));
+            end
+            
+            physio_dir=cd;
+          
+            % check if physio files exist
+            physio_files_pulse=dir('*.puls');
+            physio_files_resp=dir('*.resp');
+            
+            % add folder to path-structure
+            if ~isempty(physio_files_pulse) || ~isempty(physio_files_resp)
+                paths_cell{ss}(ii).physio=physio_dir;
             end
         end
     end
