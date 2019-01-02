@@ -15,22 +15,26 @@ function paths = agk_make_pp_paths_struct_dcm()
 %% prep struct array
 % initialize empty variables that will later be filled with the paths to
 % the respective files
+% The field names contain the required data type (MRI, log, or physio) so
+% that it can be checked whether the corresponding data (e.g. DICOMS for
+% MRI) are available.
 paths              = [];
 paths.id           = [];
 paths.site         = [];
-paths.t1           = [];
-paths.ALCUE        = [];
+paths.t1_MRI       = [];
+paths.ALCUE_MRI    = [];
 paths.ALCUE_log    = [];
-paths.faces        = [];
+paths.faces_MRI    = [];
 paths.faces_log    = [];
-paths.nback        = [];
+paths.nback_MRI    = [];
 paths.nback_log    = [];
-paths.MID          = [];
+paths.MID_MRI      = [];
 paths.MID_log      = [];
-paths.SST          = [];
+paths.SST_MRI      = [];
 paths.SST_log      = [];
 paths.physio       = [];    % folder with physio files
 paths.MRI_all      = [];    % in Mannheim all MRI files are in one folder and can only be sorted later
+paths.fieldmap_MRI = [];
 
 %% some root paths
 % save the path array under this location
@@ -108,7 +112,7 @@ for ss = 1:length(data_root)    % loop for sites
                         {mri_folders(:).name},{mri_folders(:).isdir}));
                     
                     if ~isempty(t1_folder) && length(t1_folder)==1
-                        paths_cell{ss}(ii).t1=fullfile(imag_dir,...
+                        paths_cell{ss}(ii).t1_MRI=fullfile(imag_dir,...
                             mri_folders(t1_folder).name);
                     end
                     
@@ -123,10 +127,25 @@ for ss = 1:length(data_root)    % loop for sites
                         
                         if ~isempty(task_folder) && length(task_folder)==1
                             paths_cell{ss}(ii)= setfield(paths_cell{ss}(ii),...
-                                tasks{tt},fullfile(imag_dir,...
+                                [tasks{tt} '_MRI'],fullfile(imag_dir,...
                                 mri_folders(task_folder).name));
                         end
                     end
+                    
+                    %% Find fieldmaps
+                    
+                    fm_folder = find(cellfun(@(x,y) ...
+                        ~isempty(strfind(x,'gre_field_mapping')) & y==1,...
+                        {mri_folders.name},{mri_folders.isdir}));
+                    
+                    if ~isempty(fm_folder)
+                        fm_dir=cellfun(@(x) fullfile(imag_dir,x),...
+                            {mri_folders(fm_folder).name},'UniformOutput',...
+                            false);
+                        paths_cell{ss}(ii).fieldmap_MRI=fm_dir;
+                    end
+                    
+                    
                 end
                 
             else % for Mannheim all fMRI data are in one folder, they will 
@@ -228,7 +247,9 @@ for ss = 1:length(data_root)    % loop for sites
                     if isempty(task_folder)
                         alt_task_name=[tasks{tt}(1) '_' tasks{tt}(2:end)];
                         task_folder = find(cellfun(@(x,y) ...
-                        ~isempty(regexpi(x,alt_task_name)) & y==1,...
+                        ~isempty(regexpi(x,alt_task_name)) & ...
+                        isempty(regexpi(x,'Training')) & ...
+                        isempty(regexpi(x,'Memory')) & y==1,...
                         {log_folders(:).name},{log_folders(:).isdir}));
                     end
                     
@@ -269,11 +290,14 @@ for ss = 1:length(data_root)    % loop for sites
             
             % add folder to path-structure
             if ~isempty(physio_files_pulse) || ~isempty(physio_files_resp)
-                paths_cell{ss}(ii).physio=physio_dir
-                
-            
-            
+                paths_cell{ss}(ii).physio=physio_dir;
+            end
         end
+        
+        %% check if the identified paths contain the required data
+        paths_cell{ss}(ii)=check_paths(paths_cell{ss}(ii));
+        
+        
     end
 end
         
@@ -513,6 +537,57 @@ cd(save_struct_path)
 save('ngfn_struct_paths_mri_dcm_NEW.mat','paths')
 warning('SAVING COMPLETED!')
 end
+
+%% FUNCTION CHECK_PATHS
+function new_paths = check_paths(old_paths)
+
+% define the different data types and the corresponding file extensions
+% field 'data_types.ext' must be a cell array
+data_types(1).name = 'MRI'; % functional and structural MRI data
+data_types(1).ext  = {'dcm';'ima'};
+data_types(2).name = 'log'; % log-files
+data_types(2).ext  = {'txt';'log';'xls';'xlsx'};
+data_types(3).name = 'physio'; % Pulse and respiration data
+data_types(3).ext  = {'puls';'resp'};
+
+new_paths = old_paths;
+
+% get field names and field values
+fields    = fieldnames(new_paths);
+field_val = struct2cell(new_paths);
+
+% loop through fields, access the given paths and check the existence of 
+% data at the given location
+for ff = 1:length(fields)
+    
+    % identify the data type
+    if ~isempty(field_val{ff})
+        
+        field_data_type = find(cellfun(@(x) ~isempty(regexpi(fields{ff},...
+            x)),{data_types.name}));
+        
+        if ~isempty(field_data_type) && ~iscell(field_val{ff})
+            
+            % get the content of the defined directory
+            cur_dir = cellstr(ls(field_val{ff}));
+            
+            % check whether files correspond with the required data type
+            data_check = cellfun(@(x) ~isempty(cell2mat(regexpi(cur_dir,...
+                x))), data_types(field_data_type).ext);
+            
+            % if no suitable data were found delete the path
+            if sum(data_check)==0
+                setfield(new_paths,fields{ff},[]);
+            end
+            
+        end
+
+    end
+end
+
+
+
+
 
 %% AUXILIARY FUNCTIONS
 function cur_dcm = agk_check_dcm(cur_path,sites,ss,cur_sub,tasks,tt)
