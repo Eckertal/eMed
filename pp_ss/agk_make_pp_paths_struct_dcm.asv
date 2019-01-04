@@ -284,20 +284,13 @@ for ss = 1:length(data_root)    % loop for sites
             
             physio_dir=cd;
           
-            % check if physio files exist
-            physio_files_pulse=dir('*.puls');
-            physio_files_resp=dir('*.resp');
-            
             % add folder to path-structure
-            if ~isempty(physio_files_pulse) || ~isempty(physio_files_resp)
-                paths_cell{ss}(ii).physio=physio_dir;
-            end
+            paths_cell{ss}(ii).physio=physio_dir;
+            
+            %% check if the identified paths contain the required data
+            paths_cell{ss}(ii)=check_paths(paths_cell{ss}(ii));
+            
         end
-        
-        %% check if the identified paths contain the required data
-        paths_cell{ss}(ii)=check_paths(paths_cell{ss}(ii));
-        
-        
     end
 end
         
@@ -566,10 +559,20 @@ for ff = 1:length(fields)
         field_data_type = find(cellfun(@(x) ~isempty(regexpi(fields{ff},...
             x)),{data_types.name}));
         
-        if ~isempty(field_data_type) && ~iscell(field_val{ff})
+        if ~isempty(field_data_type) 
             
+            if ~iscell(field_val{ff})
+                length_field  = 1;
+            else length_field = length(field_val{ff});
+            end
+            
+            for lf = 1:length_field
+                
             % get the content of the defined directory
-            cur_dir = cellstr(ls(field_val{ff}));
+            if length_field == 1
+                cur_dir  = cellstr(ls(field_val{ff}));
+            else cur_dir = cellstr(ls(field_val{ff}{lf}));
+            end
             
             % check whether files correspond with the required data type
             data_check = cellfun(@(x) ~isempty(cell2mat(regexpi(cur_dir,...
@@ -577,12 +580,17 @@ for ff = 1:length(fields)
             
             % if no suitable data were found delete the path
             if sum(data_check)==0
-                setfield(new_paths,fields{ff},[]);
+                if ~iscell(field_val{ff})
+                    new_paths=setfield(new_paths,fields{ff},[]);
+                else field_val{ff}{lf}=[];
+                    new_paths=setfield(new_paths,fields{ff},{lf},[]);
+                end
             end
             
+            end
         end
-
     end
+end
 end
 
 
