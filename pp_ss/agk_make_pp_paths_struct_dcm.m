@@ -91,6 +91,10 @@ for ss = 1:length(data_root)    % loop for sites
             %save id
             paths_cell{ss}(ii).id=all_dir(ii).name;
             
+            disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+            disp(['SUBJECT ' num2str(paths_cell{ss}(ii).id)]); disp(' ');
+            
+            
             cd(fullfile(data_root{ss},all_dir(ii).name));
             subj_dir=cd;
             
@@ -289,6 +293,8 @@ for ss = 1:length(data_root)    % loop for sites
             
             %% check if the identified paths contain the required data
             paths_cell{ss}(ii)=check_paths(paths_cell{ss}(ii));
+            
+            disp('done');disp('');
             
         end
     end
@@ -591,6 +597,37 @@ for ff = 1:length(fields)
         end
     end
 end
+
+% display message in command window regarding the presence or absence of
+% data
+field_val = struct2cell(new_paths); %update field values
+
+% indicate the absence of MRI data 
+if isempty(new_paths.MRI_all)
+    empty_mri=find(cellfun(@(x,y) ~isempty(regexpi(x,'_mri')) & ...
+        isempty(y),fields,field_val));
+    
+    if ~isempty(empty_mri)
+        
+        disp('Following MRI-files not found: '); 
+        disp(char(fields{empty_mri})); disp('');
+        
+    end
+end
+
+% indicate the absence of Physio data
+if isempty(new_paths.physio)
+    disp('No Physio files found.'); disp('');
+end
+
+% indicate the absence of log files
+empty_log=find(cellfun(@(x,y) ~isempty(regexpi(x,'_log')) & ...
+        isempty(y),fields,field_val));  
+if ~isempty(empty_log)
+    disp('Following log-files not found: '); 
+    disp(char(fields{empty_mri})); disp('');
+end
+
 end
 
 
