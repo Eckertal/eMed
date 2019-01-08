@@ -36,7 +36,7 @@ sites = {'Berlin','Mannheim'};
 % what to run?
 mfs         = 0; % make a folder structure
 cpl         = 0; % copy the logfiles into the folder structure
-d2n         = 1; % dicom 2 nifti
+d2n         = 0; % dicom 2 nifti
 pp          = 0; % preprocessing
 chckpp      = 0; % check pp
 cpyppt1     = 1; % copy  pp t1 (copy to external hard drive for sambu)
@@ -84,8 +84,6 @@ if mfs
 end
 
 %% ############### COPY LOGFILES PREPS ##############
-
-% Comment MR: This is probably not needed for emed
 if cpl
     % done for all except VR
     % copy the logfiles where they belong
