@@ -15,7 +15,7 @@ clear classes
 %% ############### Generell Settings ###############
 % add my lib
 %start_up
-addpath(genpath('C:\Users\agemons\Google Drive\Library\MATLAB'));
+addpath(genpath('S:\AG\AG-eMed\Daten\Library\MATLAB'));
 % where are the subject folders with MRI data?
 % or this folder and its structure will be firstly created
 base_dir_pl = 'L:\NGFN\pp1stL';
