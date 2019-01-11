@@ -18,7 +18,7 @@ clear classes
 addpath(genpath('S:\AG\AG-eMed\Daten\Library\MATLAB'));
 % where are the subject folders with MRI data?
 % or this folder and its structure will be firstly created
-base_dir_pl = 'L:\NGFN\pp1stL';
+base_dir_pl = 'S:\AG\AG-eMed\Daten\pp1stL';
 % Set spm mask threshold (for 1st level also important)
 warning('Make sure that SPM mask threshold is at 0.2')
 % path to struct that holds all path infos to subjects
@@ -34,7 +34,7 @@ tasks = {'t1','ALCUE','Faces','NBack','MID','SST'};
 sites = {'Berlin','Mannheim'};
 
 % what to run?
-mfs         = 0; % make a folder structure
+mfs         = 1; % make a folder structure
 cpl         = 0; % copy the logfiles into the folder structure
 d2n         = 1; % dicom 2 nifti
 pp          = 0; % preprocessing
@@ -78,10 +78,13 @@ if mfs
     mkdir(base_dir_pl)
     if isempty(des_subs), des_subs = 1:length(paths); end
     for ss = des_subs
-        cd(base_dir_pl)
-        agk_eMed_pp_create_foldstr(paths(ss),base_dir_pl)
+        if ~isempty(paths(ss).id)
+            cd(base_dir_pl)
+            agk_eMed_pp_create_foldstr(paths(ss),base_dir_pl)
+        end
     end
 end
+
 
 %% ############### COPY LOGFILES PREPS ##############
 

@@ -15,10 +15,10 @@ clear classes
 %% ############### Generell Settings ###############
 % add my lib
 %start_up
-addpath(genpath('C:\Users\agemons\Google Drive\Library\MATLAB'));
+addpath(genpath('S:\AG\AG-eMed\Daten\Library\MATLAB'));
 % where are the subject folders with MRI data?
 % or this folder and its structure will be firstly created
-base_dir_pl = 'L:\NGFN\pp1stL';
+base_dir_pl = 'S:\AG\AG-eMed\Daten\pp1stL';
 % Set spm mask threshold (for 1st level also important)
 warning('Make sure that SPM mask threshold is at 0.2')
 % path to struct that holds all path infos to subjects
@@ -34,9 +34,9 @@ tasks = {'t1','ALCUE','Faces','NBack','MID','SST'};
 sites = {'Berlin','Mannheim'};
 
 % what to run?
-mfs         = 0; % make a folder structure
+mfs         = 1; % make a folder structure
 cpl         = 0; % copy the logfiles into the folder structure
-d2n         = 0; % dicom 2 nifti
+d2n         = 1; % dicom 2 nifti
 pp          = 0; % preprocessing
 chckpp      = 0; % check pp
 cpyppt1     = 1; % copy  pp t1 (copy to external hard drive for sambu)
@@ -78,12 +78,16 @@ if mfs
     mkdir(base_dir_pl)
     if isempty(des_subs), des_subs = 1:length(paths); end
     for ss = des_subs
+        if ~
         cd(base_dir_pl)
         agk_eMed_pp_create_foldstr(paths(ss),base_dir_pl)
     end
 end
 
+
 %% ############### COPY LOGFILES PREPS ##############
+
+% Comment MR: This is probably not needed for emed
 if cpl
     % done for all except VR
     % copy the logfiles where they belong
