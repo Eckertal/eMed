@@ -55,5 +55,23 @@ for ff=1:length(all_fields)
     end
 end
 
+
+% make the taks subfolders
+all_fields = fieldnames(cur_struct);
+for ff = 1:length(all_fields)
+    C     = all_fields(ff);
+    TEST  = {'id','log','site'};
+    out   = cellfun(@(s)find(~cellfun('isempty',strfind(C,s))),TEST,'uni',0);
+    do_it = ~any(~cellfun(@isempty,out));
+    
+    if do_it
+       mkdir(fullfile(cur_subf,all_fields{ff})) 
+       mkdir(fullfile(cur_subf,all_fields{ff},'niftis'))
+       mkdir(fullfile(cur_subf,all_fields{ff},'logfiles'))
+       mkdir(fullfile(cur_subf,all_fields{ff},'results'))
+    end
+    disp('DONE CREATING FOLDER STRUCTURE')
+end
+
 cd(base_dir_pl)
 return
