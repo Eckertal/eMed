@@ -29,7 +29,7 @@ for ff = 1:length(all_fields)
     % test if from a desired task
     C        = cellstr(all_fields(ff));
     TEST     = tasks(des_tasks);
-    out      = cellfun(@(s)find(~cellfun('isempty',strfind(C,s))),TEST,'uni',0);
+    out      = cellfun(@(s)find(~cellfun('isempty',regexpi(C,s))),TEST,'uni',0);
     do_it_in = any(~cellfun(@isempty,out));
     
     if do_it_in && do_it_out
