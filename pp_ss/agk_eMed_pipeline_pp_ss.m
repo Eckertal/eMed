@@ -30,7 +30,7 @@ end
 
 %% ################ PARAMS #########################
 % what do we have in data?
-tasks = {'t1','ALCUE','Faces','NBack','MID','SST'};
+tasks = {'ALCUE','Faces','NBack','MID','SST'};
 sites = {'Berlin','Mannheim'};
 
 % what to run?
