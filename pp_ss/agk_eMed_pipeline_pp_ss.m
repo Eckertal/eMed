@@ -88,11 +88,10 @@ end
 
 %% ############### COPY LOGFILES PREPS ##############
 
-% Comment MR: This is probably not needed for emed
 if cpl
-    % done for all except VR
-    % copy the logfiles where they belong
-    mkdir(base_dir_pl)
+    % copy the logfiles to the newly created statistics folder
+    if ~exist(base_dir_pl,'dir')
+        error('Folders need to be created first!'); end
     if isempty(des_subs), des_subs = 1:length(paths); end
     for ss = des_subs
         cpl_feedback = agk_eMed_cp_logfiles(paths(ss),base_dir_pl,des_tasks,tasks,des_sites,sites);
